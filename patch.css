@@ -1,0 +1,111 @@
+/* ── Curtain panels: velvet texture + fabric fold highlights + damask pattern ── */
+
+#fb .p {
+    /* Base velvet red */
+    background-color: #7c0a14;
+
+    /* Layer order (top → bottom):
+       1. Fabric-fold highlight stripes (simulate draped cloth lighting)
+       2. A subtle dark vignette at the outer edge of each panel
+       3. The damask pattern tile (semi-transparent, multiply blend)
+    */
+    background-image:
+        /* Fabric fold highlights — vertical light/shadow stripes */
+        repeating-linear-gradient(
+            90deg,
+            rgba(0,0,0,0.22)       0px,
+            rgba(0,0,0,0.10)       18px,
+            rgba(255,255,255,0.06) 36px,
+            rgba(255,255,255,0.10) 52px,
+            rgba(255,255,255,0.04) 68px,
+            rgba(0,0,0,0.14)       88px,
+            rgba(0,0,0,0.20)       108px,
+            rgba(255,255,255,0.07) 128px,
+            rgba(255,255,255,0.12) 144px,
+            rgba(255,255,255,0.05) 160px,
+            rgba(0,0,0,0.18)       180px,
+            rgba(0,0,0,0.08)       200px,
+            rgba(255,255,255,0.05) 220px,
+            rgba(0,0,0,0.18)       240px
+        ),
+        /* Damask repeating tile */
+        url(../../../art/damask.webp);
+
+    background-size: auto, 120px auto;
+    background-blend-mode: overlay, multiply;
+}
+
+/* Give the left panel a slightly brighter center, darker outer edge */
+#fb .p.l {
+    background-image:
+        linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 45%),
+        repeating-linear-gradient(
+            90deg,
+            rgba(0,0,0,0.22)       0px,
+            rgba(0,0,0,0.10)       18px,
+            rgba(255,255,255,0.06) 36px,
+            rgba(255,255,255,0.10) 52px,
+            rgba(255,255,255,0.04) 68px,
+            rgba(0,0,0,0.14)       88px,
+            rgba(0,0,0,0.20)       108px,
+            rgba(255,255,255,0.07) 128px,
+            rgba(255,255,255,0.12) 144px,
+            rgba(255,255,255,0.05) 160px,
+            rgba(0,0,0,0.18)       180px,
+            rgba(0,0,0,0.08)       200px,
+            rgba(255,255,255,0.05) 220px,
+            rgba(0,0,0,0.18)       240px
+        ),
+        url(../../../art/damask.webp);
+    background-size: auto, auto, 120px auto;
+    background-blend-mode: normal, overlay, multiply;
+}
+
+/* Right panel: darker on the right outer edge */
+#fb .p.r {
+    background-image:
+        linear-gradient(90deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.35) 100%),
+        repeating-linear-gradient(
+            90deg,
+            rgba(0,0,0,0.22)       0px,
+            rgba(0,0,0,0.10)       18px,
+            rgba(255,255,255,0.06) 36px,
+            rgba(255,255,255,0.10) 52px,
+            rgba(255,255,255,0.04) 68px,
+            rgba(0,0,0,0.14)       88px,
+            rgba(0,0,0,0.20)       108px,
+            rgba(255,255,255,0.07) 128px,
+            rgba(255,255,255,0.12) 144px,
+            rgba(255,255,255,0.05) 160px,
+            rgba(0,0,0,0.18)       180px,
+            rgba(0,0,0,0.08)       200px,
+            rgba(255,255,255,0.05) 220px,
+            rgba(0,0,0,0.18)       240px
+        ),
+        url(../../../art/damask.webp);
+    background-size: auto, auto, 120px auto;
+    background-blend-mode: normal, overlay, multiply;
+}
+
+/* Soften the gold border seam — make it thicker to match the bead-chain width */
+#fb .p.l { border-right: 3px solid #c8a84b; }
+#fb .p.r { border-left:  3px solid #c8a84b; }
+
+/* Ensure #preroll also looks like velvet while the bell is ringing */
+#preroll {
+    background:
+        linear-gradient(180deg, rgba(0,0,0,0.18) 0%, transparent 30%),
+        repeating-linear-gradient(
+            90deg,
+            rgba(0,0,0,0.18)       0px,
+            rgba(255,255,255,0.05) 40px,
+            rgba(255,255,255,0.09) 70px,
+            rgba(255,255,255,0.04) 100px,
+            rgba(0,0,0,0.14)       140px
+        ),
+        url(../../../art/damask.webp),
+        linear-gradient(93deg, #5c060e, #b8151f 46%, #8e0c16);
+    background-size: auto, auto, 120px auto, auto;
+    background-blend-mode: normal, overlay, multiply, normal;
+}
+
