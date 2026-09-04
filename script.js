@@ -14,25 +14,31 @@ const stage    = document.querySelector('.invite-stage');
 const audio    = document.querySelector('audio');
 
 // ─── Curtain texture builder (ported from original Three.js canvas code) ─────
-function buildCurtainCanvas(mirrorX) {
+function generateCurtainTextures() {
     const W = 448, H = 1536;
+    
+    // Create base normal canvas (left panel & preroll)
     const cvs = document.createElement('canvas');
     cvs.width = W; cvs.height = H;
     const o = cvs.getContext('2d');
-
-    if (mirrorX) {
-        // Draw normal into a temp then blit mirrored
-        const tmp = document.createElement('canvas');
-        tmp.width = W; tmp.height = H;
-        drawCurtain(tmp.getContext('2d'), W, H);
-        // Flip: translate to right edge, then scale-X by -1 so origin is now right-to-left
-        o.translate(W, 0);
-        o.scale(-1, 1);
-        o.drawImage(tmp, 0, 0);
-    } else {
-        drawCurtain(o, W, H);
-    }
-    return cvs.toDataURL();
+    
+    // Draw the complex texture ONCE (massive performance savings)
+    drawCurtain(o, W, H);
+    
+    const leftUrl = cvs.toDataURL('image/webp', 0.85); // Use webp for faster decoding
+    
+    // Create mirrored canvas (right panel)
+    const mirrorCvs = document.createElement('canvas');
+    mirrorCvs.width = W; mirrorCvs.height = H;
+    const mCtx = mirrorCvs.getContext('2d');
+    
+    mCtx.translate(W, 0);
+    mCtx.scale(-1, 1);
+    mCtx.drawImage(cvs, 0, 0); // Fast blit from already drawn canvas
+    
+    const rightUrl = mirrorCvs.toDataURL('image/webp', 0.85);
+    
+    return { leftUrl, rightUrl };
 }
 
 function drawCurtain(o, W, H) {
@@ -133,20 +139,15 @@ function drawCurtain(o, W, H) {
 // Build and apply textures — NO CSS transforms on panels so CSS animation fires cleanly
 const pLeft  = document.querySelector('#fb .p.l');
 const pRight = document.querySelector('#fb .p.r');
-
-if (pLeft || pRight) {
-    const leftUrl  = buildCurtainCanvas(false);
-    const rightUrl = buildCurtainCanvas(true);   // mirrored: seam on left
-
-    if (pLeft)  { pLeft.style.cssText  += ';background-image:url("' + leftUrl  + '");background-size:100% 100%;border:none'; }
-    if (pRight) { pRight.style.cssText += ';background-image:url("' + rightUrl + '");background-size:100% 100%;border:none'; }
-}
-
-// Texture the preroll too (shown before curtain #fb appears)
 const preroll = document.getElementById('preroll');
+
+// Generate once
+const { leftUrl, rightUrl } = generateCurtainTextures();
+
+if (pLeft)  { pLeft.style.cssText  += ';background-image:url("' + leftUrl  + '");background-size:100% 100%;border:none'; }
+if (pRight) { pRight.style.cssText += ';background-image:url("' + rightUrl + '");background-size:100% 100%;border:none'; }
 if (preroll) {
-    const prUrl = buildCurtainCanvas(false);
-    preroll.style.backgroundImage = 'url("' + prUrl + '")';
+    preroll.style.backgroundImage = 'url("' + leftUrl + '")';
     preroll.style.backgroundSize  = 'cover';
 }
 
