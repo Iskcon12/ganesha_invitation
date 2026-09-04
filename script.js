@@ -213,6 +213,11 @@ function openInvitation() {
             wrap.removeAttribute('aria-hidden');
             wrap.removeAttribute('inert');
         }
+        // Show scroll cue
+        var cueEl = document.querySelector('.cue');
+        if (cueEl && window.scrollY < 50) {
+            cueEl.dataset.show = 'true';
+        }
     }, 2900);
 
     // Step 4 (3600ms): veil fade done → remove from layout
@@ -265,8 +270,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var cue = document.querySelector('.cue');
     if (cue) {
         window.addEventListener('scroll', function () {
-            var atBottom = document.documentElement.scrollHeight - window.innerHeight - window.scrollY < 120;
-            cue.dataset.show = (window.scrollY > window.innerHeight * 0.9 && !atBottom) ? 'true' : 'false';
+            // Show cue when near top of page, hide when scrolling down
+            cue.dataset.show = (window.scrollY < window.innerHeight * 0.15) ? 'true' : 'false';
         }, { passive: true });
         cue.addEventListener('click', function () {
             window.scrollBy({ top: Math.round(window.innerHeight * 0.85), behavior: 'smooth' });
